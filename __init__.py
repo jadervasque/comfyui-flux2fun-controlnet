@@ -8,13 +8,18 @@ Model: https://huggingface.co/alibaba-pai/FLUX.2-dev-Fun-Controlnet-Union
 Based on: https://github.com/alibaba/VideoX-Fun
 """
 
-from .flux_patch_compat import apply_compat_patch
+from . import nodes as _nodes
+from .dit_injection import build_controlnet_wrapper
 
-# Install before importing nodes. nodes.py still calls flux_patch.apply_patch(),
-# but the shared _patched flag makes that legacy call a no-op.
-apply_compat_patch()
+# Replace only this extension's local wrapper class. The Apply node resolves the
+# module global at execution time, so every newly created wrapper uses ComfyUI's
+# official per-generation DIT hooks without modifying Flux.forward_orig globally.
+_nodes.ControlNetWrapper = build_controlnet_wrapper(_nodes.ControlNetWrapper)
 
-from .nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
+NODE_CLASS_MAPPINGS = _nodes.NODE_CLASS_MAPPINGS
+NODE_DISPLAY_NAME_MAPPINGS = _nodes.NODE_DISPLAY_NAME_MAPPINGS
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
+
+print("[Flux2 Fun] Official composable DIT hook integration enabled")
