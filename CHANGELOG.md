@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-07-27
+
+### Fixed
+- Updated the Flux2 Fun conditioning wrapper to implement ComfyUI's current `ControlBase` lifecycle.
+- Initialized `multigpu_clones`, fixing failures in `pre_run_control` on current ComfyUI releases.
+- Added compatible copy, cleanup, hook traversal, memory accounting, and explicit multi-GPU deep-clone behavior.
+
 ## [1.2.0] - 2026-07-27
 
 ### Changed
